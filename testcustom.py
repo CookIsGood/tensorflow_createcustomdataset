@@ -11,7 +11,7 @@ import cv2
 # Создание тренировачных входных данных
 DATADIR = "A:\python\createcustomtensorflow\img"
 CATEGORIES = ["True", "False"]
-IMG_SIZE = 300
+IMG_SIZE = 100
 training_data = []
 
 
@@ -21,7 +21,7 @@ def create_training_data():
         class_num = CATEGORIES.index(category)
         for img in os.listdir(path):
             try:
-                img_array = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)
+                img_array = cv2.imread(os.path.join(path, img))
                 new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
                 training_data.append([new_array, class_num])
             except Exception as e:
@@ -62,7 +62,7 @@ def create_test_data():
         class_num = TESTCATEGORIES.index(category)
         for img in os.listdir(path):
             try:
-                img_array = cv2.imread(os.path.join(path, img), cv2.IMREAD_GRAYSCALE)
+                img_array = cv2.imread(os.path.join(path, img))
                 new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
                 test_data.append([new_array, class_num])
             except Exception as e:
@@ -93,10 +93,10 @@ np.save('test_label.npy', shuffle_test_label)
 
 print("Размер и количество тестовых картинок", shuffle_test_img.shape)
 print("Количество тестовых меток", len(shuffle_test_label))
-input_shape = (IMG_SIZE, IMG_SIZE)
+input_shape = (IMG_SIZE, IMG_SIZE, 3)
 model3 = keras.Sequential([
-    keras.layers.Conv1D(3, 1, padding="same", activation="relu", input_shape=input_shape),
-    keras.layers.Flatten(input_shape=(IMG_SIZE, IMG_SIZE)),
+    keras.layers.Conv2D(20, kernel_size=(3, 3), padding="same", activation="relu", input_shape=input_shape),
+    keras.layers.Flatten(input_shape=(IMG_SIZE, IMG_SIZE, 3)),
     keras.layers.Dense(128, activation='relu'),
     keras.layers.Dense(2, activation='softmax')
 ])
@@ -106,5 +106,6 @@ model3.compile(optimizer='Adadelta',
 model3.fit(shuffle_training_img, shuffle_training_label, epochs=10)
 test_lose, test_acc = model3.evaluate(shuffle_test_img, shuffle_test_label)
 print("\nТочность на проверочных данных: ", test_acc)
+model3.summary()
 model3.save('tensorblack.h5')
 print('Модель успешно сохранена')
