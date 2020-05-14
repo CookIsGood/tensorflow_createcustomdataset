@@ -1,25 +1,18 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-
 # TensorFlow и tf.keras
-import tensorflow as tf
 from tensorflow import keras
 
 # Вспомогательные библиотеки
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-test_img = np.load('test_img.npy')  # loading
-test_label = np.load('test_label.npy')
-
-c = np.c_[test_img.reshape(len(test_img), -1), test_label.reshape(len(test_label), -1)]
-np.random.shuffle(c)
-shuffle_test_img = c[:, :test_img.size//len(test_img)].reshape(test_img.shape)
-shuffle_test_label = c[:, test_img.size//len(test_img):].reshape(test_label.shape)
+shuffle_test_img = np.load('test_img.npy')  # loading
+shuffle_test_label = np.load('test_label.npy')
 
 class_names = ['Yes', 'No']
 
 model = keras.models.load_model('tensorblack.h5')
+
 test_lose, test_acc = model.evaluate(shuffle_test_img, shuffle_test_label)
 print("\nТочность на проверочных данных: ", test_acc)
 predictions = model.predict(shuffle_test_img)

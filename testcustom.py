@@ -45,6 +45,7 @@ np.random.shuffle(c1)
 shuffle_training_img = c1[:, :training_img.size//len(training_img)].reshape(training_img.shape)
 shuffle_training_label = c1[:, training_img.size//len(training_img):].reshape(training_label.shape)
 np.save('train_img.npy', shuffle_training_img)
+np.save('train_label.npy', shuffle_training_label)
 
 
 print("Размер и количество тренировочных картинок", shuffle_training_img.shape)
@@ -86,6 +87,8 @@ c = np.c_[test_img.reshape(len(test_img), -1), test_label.reshape(len(test_label
 np.random.shuffle(c)
 shuffle_test_img = c[:, :test_img.size//len(test_img)].reshape(test_img.shape)
 shuffle_test_label = c[:, test_img.size//len(test_img):].reshape(test_label.shape)
+np.save('test_img.npy', shuffle_test_img)
+np.save('test_label.npy', shuffle_test_label)
 
 
 print("Размер и количество тестовых картинок", shuffle_test_img.shape)
